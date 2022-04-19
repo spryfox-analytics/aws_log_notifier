@@ -41,15 +41,15 @@ def collect_details(payload):
     return log_group_name, log_stream_name, message, component_name
 
 
-def publish_message(log_group, logstream, message, component_name):
+def publish_message(log_group, log_stream, log_message, component_name):
     try:
         message = ""
         message += "\nSummary" + "\n\n"
         message += "##########################################################\n"
         message += "# Log group name: " + str(log_group) + "\n"
-        message += "# Log stream: " + str(logstream) + "\n"
+        message += "# Log stream: " + str(log_stream) + "\n"
         message += "# Log message: " + "\n"
-        message += "# \t\t" + str(message.split("\n")) + "\n"
+        message += "# \t\t" + str(log_message.split("\n")) + "\n"
         message += "##########################################################\n"
         SNS_CLIENT.publish(
             TargetArn=SNS_TOPIC_ARN,
