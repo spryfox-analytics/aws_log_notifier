@@ -4,10 +4,10 @@ locals {
 
 data "archive_file" "log_notifier_lambda_archive_file" {
   type        = "zip"
-  output_path = "${path.module}/${var.log_notifier_lambda_target_path}"
+  output_path = var.log_notifier_lambda_target_path
   dynamic "source" {
     for_each = toset([
-      "${path.module}/${var.log_notifier_lambda_name_src_file_path}"
+      var.log_notifier_lambda_name_src_file_path
     ])
     content {
       content  = file("${path.module}/${source.value}")
@@ -17,7 +17,7 @@ data "archive_file" "log_notifier_lambda_archive_file" {
 }
 
 resource "aws_lambda_function" "log_notifier_lambda" {
-  filename = "${path.module}/${var.log_notifier_lambda_target_path}"
+  filename = var.log_notifier_lambda_target_path
   function_name = local.log_notifier_lambda_name
   role = aws_iam_role.log_notifier_lambda_role.arn
   handler = "lambda_function.lambda_handler"
