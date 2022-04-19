@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
 
 EMAIL_SUBJECT_PREFIX = os.environ['EMAIL_SUBJECT_PREFIX']
-SNS_TOPIC_ARN = os.environ['ERROR_LOG_NOTIFIER_SNS_ARN']
+SNS_TOPIC_ARN = os.environ['LOG_NOTIFIER_SNS_TOPIC_ARN']
 SNS_CLIENT = boto3.client('sns')
 
 
@@ -24,8 +24,8 @@ def extract_log_payload(event):
     return log_payload
 
 
-def collect_error_details(payload):
-    error_message = ""
+def collect_details(payload):
+    message = ""
     log_events = payload['logEvents']
     LOGGER.debug(payload)
     log_group_name = payload['logGroup']
@@ -36,24 +36,24 @@ def collect_error_details(payload):
     LOGGER.debug(f"Component name: {component_name[3]}")
     LOGGER.debug(log_events)
     for log_event in log_events:
-        error_message += log_event['message']
-    LOGGER.debug('Message: %s' % error_message.split("\n"))
-    return log_group_name, log_stream_name, error_message, component_name
+        message += log_event['message']
+    LOGGER.debug('Message: %s' % message.split("\n"))
+    return log_group_name, log_stream_name, message, component_name
 
 
-def publish_error_message(log_group, logstream, error_message, component_name):
+def publish_message(log_group, logstream, message, component_name):
     try:
         message = ""
-        message += "\nError summary" + "\n\n"
+        message += "\nSummary" + "\n\n"
         message += "##########################################################\n"
         message += "# Log group name: " + str(log_group) + "\n"
         message += "# Log stream: " + str(logstream) + "\n"
         message += "# Log message: " + "\n"
-        message += "# \t\t" + str(error_message.split("\n")) + "\n"
+        message += "# \t\t" + str(message.split("\n")) + "\n"
         message += "##########################################################\n"
         SNS_CLIENT.publish(
             TargetArn=SNS_TOPIC_ARN,
-            Subject=f"[{EMAIL_SUBJECT_PREFIX}] Error Notice for {component_name[3]}",
+            Subject=f"[{EMAIL_SUBJECT_PREFIX}] Notice for {component_name[3]}",
             Message=message
         )
     except ClientError as e:
@@ -62,5 +62,5 @@ def publish_error_message(log_group, logstream, error_message, component_name):
 
 def lambda_handler(event, context):
     log_payload = extract_log_payload(event)
-    log_group_name, log_stream_name, error_message, component_name = collect_error_details(log_payload)
-    publish_error_message(log_group_name, log_stream_name, error_message, component_name)
+    log_group_name, log_stream_name, message, component_name = collect_details(log_payload)
+    publish_message(log_group_name, log_stream_name, message, component_name)

@@ -29,7 +29,7 @@ resource "aws_lambda_function" "log_notifier_lambda" {
   ]
   environment {
     variables = {
-      LOG_NOTIFIER_SNS_ARN = aws_sns_topic.log_notifier_sns_topic.arn,
+      LOG_NOTIFIER_SNS_TOPIC_ARN = aws_sns_topic.log_notifier_sns_topic.arn,
       EMAIL_SUBJECT_PREFIX = var.email_subject_prefix
     }
   }
