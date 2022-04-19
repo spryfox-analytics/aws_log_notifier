@@ -1,8 +1,8 @@
 locals {
-  sns_topic_name = "${var.kebab_case_name_prefix}error-log-notifier-sns-topic"
+  sns_topic_name = "${var.kebab_case_name_prefix}log-notifier-sns-topic"
 }
 
-resource "aws_sns_topic" "error_log_notifier_sns_topic" {
+resource "aws_sns_topic" "log_notifier_sns_topic" {
   name            = local.sns_topic_name
   tags = {
     Customer    = var.customer
@@ -12,8 +12,8 @@ resource "aws_sns_topic" "error_log_notifier_sns_topic" {
   }
 }
 
-resource "aws_sns_topic_subscription" "error_log_notifier_sns_topic_subscription" {
-  topic_arn = aws_sns_topic.error_log_notifier_sns_topic.arn
+resource "aws_sns_topic_subscription" "log_notifier_sns_topic_subscription" {
+  topic_arn = aws_sns_topic.log_notifier_sns_topic.arn
   protocol  = "email"
-  endpoint  = var.error_log_receiver_email_address
+  endpoint  = var.log_receiver_email_address
 }

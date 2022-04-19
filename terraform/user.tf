@@ -1,9 +1,9 @@
 locals {
-  error_log_notifier_deployment_user_policy_name = "${var.camel_case_name_prefix}ErrorLogNotifierDeploymentUserPolicy"
+  log_notifier_deployment_user_policy_name = "${var.camel_case_name_prefix}LogNotifierDeploymentUserPolicy"
 }
 
-resource "aws_iam_policy" "error_log_notifier_deployment_user_policy" {
-  name = local.error_log_notifier_deployment_user_policy_name
+resource "aws_iam_policy" "log_notifier_deployment_user_policy" {
+  name = local.log_notifier_deployment_user_policy_name
   policy = jsonencode({
     Version: "2012-10-17",
     Statement: [
@@ -32,10 +32,10 @@ resource "aws_iam_policy" "error_log_notifier_deployment_user_policy" {
           "sns:List*"
         ],
         Resource: [
-          "${aws_cloudwatch_log_group.error_log_notifier_lambda_log_group.arn}*",
-          "${aws_iam_role.error_log_notifier_lambda_role.arn}*",
-          "${aws_lambda_function.error_log_notifier_lambda.arn}*",
-          "${aws_sns_topic.error_log_notifier_sns_topic.arn}*"
+          "${aws_cloudwatch_log_group.log_notifier_lambda_log_group.arn}*",
+          "${aws_iam_role.log_notifier_lambda_role.arn}*",
+          "${aws_lambda_function.log_notifier_lambda.arn}*",
+          "${aws_sns_topic.log_notifier_sns_topic.arn}*"
         ]
       },
       {
@@ -55,14 +55,14 @@ resource "aws_iam_policy" "error_log_notifier_deployment_user_policy" {
           "lambda:UpdateFunctionConfiguration"
         ],
         Resource : [
-          aws_lambda_function.error_log_notifier_lambda.arn,
+          aws_lambda_function.log_notifier_lambda.arn,
         ]
       }
     ]
   })
 }
 
-resource "aws_iam_user_policy_attachment" "error_log_notifier_deployment_user_policy_attachment" {
+resource "aws_iam_user_policy_attachment" "log_notifier_deployment_user_policy_attachment" {
   user = var.deployment_user_name
-  policy_arn = aws_iam_policy.error_log_notifier_deployment_user_policy.arn
+  policy_arn = aws_iam_policy.log_notifier_deployment_user_policy.arn
 }

@@ -34,21 +34,21 @@ variable "deployment_user_name" {
   type = string
 }
 
-variable "error_log_receiver_email_address" {
+variable "log_receiver_email_address" {
   type = string
 }
 
-variable "error_log_notifier_lambda_name_src_file_path" {
+variable "log_notifier_lambda_name_src_file_path" {
   type = string
   default = "../python/lambda_function.py"
 }
 
-variable "error_log_notifier_lambda_target_path" {
+variable "log_notifier_lambda_target_path" {
   type = string
   default = "../target/lambda_function.zip"
 }
 
-variable "error_filter_pattern" {
+variable "filter_pattern" {
   type = string
   default = "?ERROR ?Error ?error" # ?WARN ?5xx ?401 ?403"
 }
