@@ -5,7 +5,6 @@ module "log_notifier" {
   aws_region = var.aws_region
   camel_case_name_prefix = var.camel_case_name_prefix
   customer = var.customer
-  deployment_user_name = var.deployment_user_name
   email_subject_prefix = var.email_subject_prefix
   filter_pattern = var.filter_pattern
   log_receiver_email_address = var.log_receiver_email_address

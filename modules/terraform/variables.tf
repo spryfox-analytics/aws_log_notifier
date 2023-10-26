@@ -30,10 +30,6 @@ variable "log_group_name" {
   type = string
 }
 
-variable "deployment_user_name" {
-  type = string
-}
-
 variable "log_receiver_email_address" {
   type = string
 }
