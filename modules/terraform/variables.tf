@@ -49,3 +49,7 @@ variable "filter_pattern" {
 variable "email_subject_prefix" {
   type = string
 }
+
+variable "log_retention_in_days" {
+  type = number
+}

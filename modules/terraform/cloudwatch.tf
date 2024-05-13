@@ -8,5 +8,5 @@ resource "aws_cloudwatch_log_subscription_filter" "log_notifier_cloudwatch_log_s
 
 resource "aws_cloudwatch_log_group" "log_notifier_lambda_log_group" {
   name = "/aws/lambda/${local.log_notifier_lambda_name}"
-  retention_in_days = 30
+  retention_in_days = var.log_retention_in_days
 }
