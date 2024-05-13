@@ -8,7 +8,8 @@ module "log_notifier" {
   email_subject_prefix = var.email_subject_prefix
   filter_pattern = var.filter_pattern
   log_receiver_email_address = var.log_receiver_email_address
-  kebab_case_name_prefix =var.kebab_case_name_prefix
+  log_retention_in_days = var.log_retention_in_days
+  kebab_case_name_prefix = var.kebab_case_name_prefix
   log_group_arn = var.log_group_arn
   log_group_name = var.log_group_name
   log_notifier_lambda_name_src_file_path = var.log_notifier_lambda_name_src_file_path

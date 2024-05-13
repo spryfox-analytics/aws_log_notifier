@@ -14,11 +14,20 @@ variable "aws_region" {
   type = string
 }
 
-variable "kebab_case_name_prefix" {
+variable "camel_case_name_prefix" {
   type = string
 }
 
-variable "camel_case_name_prefix" {
+variable "email_subject_prefix" {
+  type = string
+}
+
+variable "filter_pattern" {
+  type = string
+  default = "?ERROR ?Error ?error" # ?WARN ?5xx ?401 ?403"
+}
+
+variable "kebab_case_name_prefix" {
   type = string
 }
 
@@ -44,11 +53,6 @@ variable "log_notifier_lambda_target_path" {
   default = "../target/lambda_function.zip"
 }
 
-variable "filter_pattern" {
-  type = string
-  default = "?ERROR ?Error ?error" # ?WARN ?5xx ?401 ?403"
-}
-
-variable "email_subject_prefix" {
-  type = string
+variable "log_retention_in_days" {
+  type = number
 }
