@@ -22,7 +22,7 @@ resource "aws_lambda_function" "log_notifier_lambda" {
   role = aws_iam_role.log_notifier_lambda_role.arn
   handler = "lambda_function.lambda_handler"
   source_code_hash = data.archive_file.log_notifier_lambda_archive_file.output_base64sha256
-  runtime = "python3.11"
+  runtime = "python3.9"
   depends_on = [
     aws_iam_role_policy_attachment.log_notifier_lambda_role_log_policy_attachment,
     aws_cloudwatch_log_group.log_notifier_lambda_log_group
