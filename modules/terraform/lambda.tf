@@ -42,9 +42,9 @@ resource "aws_lambda_function" "log_notifier_lambda" {
 }
 
 resource "aws_lambda_permission" "log_notifier_lambda_permission" {
-  statement_id  = "AllowExecutionFromCloudwatch"
+  statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.log_notifier_lambda.arn
-  principal     = "logs.${var.aws_region}.amazonaws.com"
+  function_name = aws_lambda_function.log_notifier_lambda.function_name
+  principal     = "logs.amazonaws.com"
   source_arn    = "${var.log_group_arn}:*"
 }
