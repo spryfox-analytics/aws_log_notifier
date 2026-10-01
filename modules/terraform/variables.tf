@@ -53,3 +53,8 @@ variable "email_subject_prefix" {
 variable "log_retention_in_days" {
   type = number
 }
+
+variable "lambda_runtime" {
+  type    = string
+  default = "python3.13"
+}

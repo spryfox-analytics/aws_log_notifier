@@ -14,6 +14,17 @@ EMAIL_SUBJECT_PREFIX = os.environ['EMAIL_SUBJECT_PREFIX']
 SNS_TOPIC_ARN = os.environ['LOG_NOTIFIER_SNS_TOPIC_ARN']
 SNS_CLIENT = boto3.client('sns')
 
+# SNS accepts messages of up to 256 KB. A single log event, e.g. a logged
+# query with thousands of parameters, can be larger than that on its own.
+MAX_EVENT_LENGTH = 4000
+MAX_MESSAGE_BYTES = 200 * 1024
+
+
+def shorten(text, limit):
+    if len(text) <= limit:
+        return text
+    return text[:limit] + f" ... ({len(text) - limit} more characters)"
+
 
 def extract_log_payload(event):
     LOGGER.setLevel(logging.DEBUG)
@@ -36,7 +47,7 @@ def collect_details(payload):
     LOGGER.debug(f"Component name: {component_name[3]}")
     LOGGER.debug(log_events)
     for log_event in log_events:
-        message += log_event['message']
+        message += shorten(log_event['message'], MAX_EVENT_LENGTH)
     LOGGER.debug('Message: %s' % message.split("\n"))
     return log_group_name, log_stream_name, message, component_name
 
@@ -51,6 +62,9 @@ def publish_message(log_group, log_stream, log_message, component_name):
         message += "# Log message: " + "\n"
         message += "# \t\t" + str(log_message.split("\n")) + "\n"
         message += "##########################################################\n"
+        encoded = message.encode('utf-8')
+        if len(encoded) > MAX_MESSAGE_BYTES:
+            message = encoded[:MAX_MESSAGE_BYTES].decode('utf-8', 'ignore') + "\n... (message shortened)\n"
         SNS_CLIENT.publish(
             TargetArn=SNS_TOPIC_ARN,
             Subject=f"[{EMAIL_SUBJECT_PREFIX}] Notice for {component_name[3]}",

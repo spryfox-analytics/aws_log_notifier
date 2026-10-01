@@ -7,6 +7,7 @@ module "log_notifier" {
   customer = var.customer
   email_subject_prefix = var.email_subject_prefix
   filter_pattern = var.filter_pattern
+  lambda_runtime = var.lambda_runtime
   log_receiver_email_address = var.log_receiver_email_address
   log_retention_in_days = var.log_retention_in_days
   kebab_case_name_prefix = var.kebab_case_name_prefix

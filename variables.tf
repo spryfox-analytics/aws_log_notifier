@@ -56,3 +56,9 @@ variable "log_notifier_lambda_target_path" {
 variable "log_retention_in_days" {
   type = number
 }
+
+variable "lambda_runtime" {
+  type        = string
+  default     = "python3.13"
+  description = "Python runtime of the notifier Lambda."
+}
