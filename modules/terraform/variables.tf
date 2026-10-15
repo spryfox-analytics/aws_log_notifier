@@ -43,7 +43,28 @@ variable "log_notifier_lambda_target_path" {
 }
 
 variable "filter_pattern" {
-  type = string
+  type    = string
+  default = null
+}
+
+variable "exclude_patterns" {
+  type    = list(string)
+  default = []
+}
+
+variable "dedup_window_in_minutes" {
+  type    = number
+  default = 60
+}
+
+variable "dedup_table_deletion_protection" {
+  type    = bool
+  default = false
+}
+
+variable "max_sample_lines" {
+  type    = number
+  default = 20
 }
 
 variable "email_subject_prefix" {

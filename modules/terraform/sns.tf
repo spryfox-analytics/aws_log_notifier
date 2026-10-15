@@ -3,7 +3,7 @@ locals {
 }
 
 resource "aws_sns_topic" "log_notifier_sns_topic" {
-  name            = local.sns_topic_name
+  name = local.sns_topic_name
   tags = {
     Customer    = var.customer
     Project     = var.project

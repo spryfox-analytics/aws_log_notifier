@@ -17,20 +17,26 @@ data "archive_file" "log_notifier_lambda_archive_file" {
 }
 
 resource "aws_lambda_function" "log_notifier_lambda" {
-  filename = var.log_notifier_lambda_target_path
-  function_name = local.log_notifier_lambda_name
-  role = aws_iam_role.log_notifier_lambda_role.arn
-  handler = "lambda_function.lambda_handler"
+  filename         = var.log_notifier_lambda_target_path
+  function_name    = local.log_notifier_lambda_name
+  role             = aws_iam_role.log_notifier_lambda_role.arn
+  handler          = "lambda_function.lambda_handler"
   source_code_hash = data.archive_file.log_notifier_lambda_archive_file.output_base64sha256
-  runtime = var.lambda_runtime
+  runtime          = var.lambda_runtime
+  timeout          = 30
   depends_on = [
     aws_iam_role_policy_attachment.log_notifier_lambda_role_log_policy_attachment,
+    aws_iam_role_policy_attachment.log_notifier_lambda_role_dedup_policy_attachment,
     aws_cloudwatch_log_group.log_notifier_lambda_log_group
   ]
   environment {
     variables = {
-      LOG_NOTIFIER_SNS_TOPIC_ARN = aws_sns_topic.log_notifier_sns_topic.arn,
-      EMAIL_SUBJECT_PREFIX = var.email_subject_prefix
+      LOG_NOTIFIER_SNS_TOPIC_ARN = aws_sns_topic.log_notifier_sns_topic.arn
+      EMAIL_SUBJECT_PREFIX       = var.email_subject_prefix
+      EXCLUDE_PATTERNS           = jsonencode(var.exclude_patterns)
+      DEDUP_TABLE_NAME           = local.dedup_enabled ? aws_dynamodb_table.log_notifier_dedup_table[0].name : ""
+      DEDUP_WINDOW_SECONDS       = tostring(var.dedup_window_in_minutes * 60)
+      MAX_SAMPLE_LINES           = tostring(var.max_sample_lines)
     }
   }
   tags = {
